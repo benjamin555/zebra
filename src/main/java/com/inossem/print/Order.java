@@ -58,6 +58,12 @@ public class Order {
 	public void setInStorageDate(String inStorageDate) {
 		this.inStorageDate = inStorageDate;
 	}
+	@Override
+	public String toString() {
+		return "Order [batchCode=" + batchCode + ", purNo=" + purNo + ", supplierDesc=" + supplierDesc
+				+ ", contractNo=" + contractNo + ", reqDept=" + reqDept + ", materielCode=" + materielCode
+				+ ", materielDesc=" + materielDesc + ", inStorageDate=" + inStorageDate + "]";
+	}
 	
 	
 

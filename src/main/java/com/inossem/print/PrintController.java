@@ -15,9 +15,10 @@ public class PrintController {
     }  
     
     
-    @RequestMapping(value="/go",method=RequestMethod.POST) 
     @ResponseBody
+    @RequestMapping(value="/go",method=RequestMethod.POST) 
     public Result<Order> go(@RequestBody Order order){  
+    	System.out.println("test");
     	Result<Order> r = new Result<Order>();
     	r.setData(order);
     	r.setCode(Result.SUCCESS);
