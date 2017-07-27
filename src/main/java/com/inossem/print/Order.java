@@ -10,6 +10,15 @@ public class Order {
 	private String materielCode;
 	private String materielDesc;
 	private String inStorageDate;
+	private String machineName;
+	
+	
+	public String getMachineName() {
+		return machineName;
+	}
+	public void setMachineName(String machineName) {
+		this.machineName = machineName;
+	}
 	public String getBatchCode() {
 		return batchCode;
 	}
