@@ -18,14 +18,14 @@ public class Print {
 //		for (int i = 0; i < 2; i++) {
 //			
 //			com.inossem.print.Print.execute("000107020080001655,,,150500001A","2311040086875394", "23000039130", "01",
-//					"包装材料、标识-包装材料-胶纸","中国石油化工股份有限公司物资装备部中国石油化工股份有限公司物资装备部","","", "Microsoft XPS Document Writer",0);
+//					"包装材料、标识-包装材料-胶纸","中国石油化工股份有限公司物资装备部中国石油化工股份有限公司物资装备部","","", "ZDesigner GK888t",0);
 //		
 //			
 //		}
 		Order o = new Order();
 		o.setBatchCode("10004");
 		o.setPurNo("test");
-		o.setMachineName("Gprinter  GP-3120TU");
+		o.setMachineName("ZDesigner GK888t");
 		com.inossem.print.Print.execute(o);
 	}
 }
