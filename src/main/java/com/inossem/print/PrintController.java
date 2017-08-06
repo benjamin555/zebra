@@ -22,6 +22,13 @@ public class PrintController {
     	Result<Order> r = new Result<Order>();
     	r.setData(order);
     	r.setCode(Result.SUCCESS);
+    	try{
+    		ZplPrint.execute(order);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		r.setCode(Result.ERROR);
+    		r.setMsg("打印报错!");
+    	}
     	return r;  
     }  
       
