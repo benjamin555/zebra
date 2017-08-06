@@ -7,6 +7,7 @@ import com.inossem.print.ZplPrint;
 
 public class ZplPrintTest {
 	
+	private ZplPrint print = new ZplPrint();
 	@Test
 	public void testExec() throws Exception {
 		Order o = new Order();
@@ -19,7 +20,7 @@ public class ZplPrintTest {
 		o.setPurNo("asfa-asdfads-12312");
 		o.setReqDept("提昂看接口填写");
 		o.setSupplierDesc("asdfasdfa是打发点算法");
-		ZplPrint.execute(o );
+		print.execute(o );
 	}
 
 }
