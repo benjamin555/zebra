@@ -1,7 +1,5 @@
 package com.thinkgem.jeesite.test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -11,15 +9,11 @@ import javax.print.DocPrintJob;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
-import javax.print.attribute.DocAttributeSet;
-import javax.print.attribute.HashDocAttributeSet;
-import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.PrinterName;
 
 public class ZplPrinter2 {
 	private String printerURI = null;//打印机完整路径
 	private PrintService printService = null;//打印机服务
-	private byte[] dotFont;
 	private String begin = "^XA^SEE:GB18030.DAT^CW1,E:SIMSUN.FNT"; //标签格式以^XA开始
 	private String end = "^XZ"; //标签格式以^XZ结束
 	private static String content = "";
@@ -27,30 +21,27 @@ public class ZplPrinter2 {
 	private static int charSize = 20;
 	private static int charSep = 10;
 	private static int lineSep = 20;
-	private static int height = 395;
+	private static int height = 385;
 	private static int lableLength = 5* cnCharSize;
 	private static int labelx = 530;
-	private static int labely = 180;
+	private static int labely = 170;
 	
-//	^XA
-//
-//	^CI26  //ASCII Transparency和多字节亚洲编码
-//
-//	^SEE:GB18030.DAT  //码表
-//
-//	^CW1,E:SIMSUN.FNT  //字体（宋体）
-//
-//	^FO200,200^A1N,48,48^FD中文^FS //打印文字
-//
-//	^FT448,288^BQ2,2,10^A1N,48,48^FD中文^FS  //打印二维码
-//
-//	^XZ
+	//二维码起始的x
+	private static int bqx = 350;
+	//二维码起始的y
+	private static int bqy = 20;
+	//底部内容起始的x
+	private static int bottomx = 170;
+	//底部内容起始的y
+	private static int bottomy = 20;
+	
 
 	public static void main(String[] args) throws IOException {
 		ZplPrinter2 p = new ZplPrinter2("ZDesigner GK888t_ol");
 		String content_str = "##|200050|25100400001|100|20161019|201101-03|820005016101900393##";
 //		//F0 x坐标，y坐标
-		String qrcode_t = "^FO350,20^BQ,2,4^FDQA,${data}^FS";
+		String qrcode_t = "^FO%s,%s^BQ,2,4^FDQA,${data}^FS";
+		qrcode_t = String.format(qrcode_t, bqx,bqy);
 		p.setBarcode(content_str, qrcode_t);
 		
 		content+="^FWR";
@@ -69,10 +60,14 @@ public class ZplPrinter2 {
 		xy = setLabelValue(p, xy, "合同号：","HT-2017-001");
 		xy = setLabelValue(p, xy, "需求部门：","a天涯实a验室");
 		
+		xy[0]= bottomx;
+		xy[1]= bottomy;
+		xy = setBottomLabelValue(p, xy, "物料编号：","600000122");
+		xy = setBottomLabelValue(p, xy, "物料描述：","探索的烦恼圣诞节佛案件的萨达是四等分卡僵尸洞你放假");
+		xy = setBottomLabelValue(p, xy, "入库时间：","2017-07-15");
 		
 		content += "^CI0^PQ1";//打印1张
 		
-//		content = "^XA^FO150,100^BY3^B4N,20,A,A^FD12345ABCDE^FS^XZ";
 		String zpl2 = p.getZpl();
 		System.out.println("zpl:"+zpl2);
 		p.print(zpl2);
@@ -86,6 +81,15 @@ public class ZplPrinter2 {
 		xy[0]-=charSize+lineSep;
 		return xy;
 	}
+	
+	private static int[] setBottomLabelValue(ZplPrinter2 p, int[] xy, String label1, String value1) {
+		xy[1]=bottomy;
+		xy = p.setText(label1, xy);
+		xy[1]=bottomy +lableLength;
+		xy = p.setText(value1, xy);
+		xy[0]-=charSize+lineSep;
+		return xy;
+	}
 
 	 /** 
      * 构造方法 
@@ -93,25 +97,6 @@ public class ZplPrinter2 {
      */  
     public ZplPrinter2(String printerURI){  
         this.printerURI = printerURI;  
-        //加载字体  
-        File file = new File("C://ts24.lib");  
-        if(file.exists()){  
-            FileInputStream fis;  
-            try {  
-                fis = new FileInputStream(file);  
-                dotFont = new byte[fis.available()];  
-                fis.read(dotFont);  
-                fis.close();  
-            } catch (IOException e) {  
-                e.printStackTrace();  
-            }  
-        }else{  
-            System.out.println("C://ts24.lib文件不存在");  
-        }  
-        //初始化打印机  
-//        DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;  
-//        DocAttributeSet attrs = new HashDocAttributeSet(); 
-//        attrs.add(OrientationRequested.PORTRAIT); 
         PrintService[] services = PrintServiceLookup.lookupPrintServices(null,null);  
         if (services != null && services.length > 0) {  
             for (PrintService service : services) {  
@@ -244,17 +229,9 @@ public class ZplPrinter2 {
 			e1.printStackTrace();
 		}
 		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
-		DocAttributeSet das = new HashDocAttributeSet();
-//		das.add(OrientationRequested.LANDSCAPE);
-		das.add(new MediaPrintableArea(0, 0, 50, 70, MediaPrintableArea.MM));
-		Doc doc = new SimpleDoc(by, flavor, das);
-		
+		Doc doc = new SimpleDoc(by, flavor, null);
 		try {
-//			PrintRequestAttributeSet rpa =new HashPrintRequestAttributeSet();
-//			rpa.add(OrientationRequested.LANDSCAPE);
-//			rpa.add(MediaSize.findMedia(2, 1, Size2DSyntax.INCH)); 
 			job.print(doc, null);
-			
 			System.out.println("已打印");
 			return true;
 		} catch (Exception e) {
@@ -263,23 +240,6 @@ public class ZplPrinter2 {
 		}
 	}
 
-	/**
-	* 字符串转byte[]
-	* @param s
-	* @return
-	*/
-	private byte[] str2bytes(String s) {
-		if (null == s || "".equals(s)) {
-			return null;
-		}
-		byte[] abytes = null;
-		try {
-			abytes = s.getBytes("gb18030");
-		} catch (UnsupportedEncodingException ex) {
-			ex.printStackTrace();
-		}
-		return abytes;
-	}
 
 	/**
 	* 过滤特殊字符
