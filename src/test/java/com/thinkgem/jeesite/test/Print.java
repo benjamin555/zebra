@@ -25,7 +25,7 @@ public class Print {
 		Order o = new Order();
 		o.setBatchCode("10004");
 		o.setPurNo("test");
-		o.setMachineName("ZDesigner GK888t");
+		o.setMachineName("ZDesigner GK888t_ol");
 		com.inossem.print.Print.execute(o);
 	}
 }

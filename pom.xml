@@ -13,7 +13,7 @@
 		<!-- main version setting -->
 		<spring.version>4.0.8.RELEASE</spring.version>
 		<!-- environment setting -->
-		<jdk.version>1.8</jdk.version>
+		<jdk.version>1.6</jdk.version>
 		<tomcat.version>2.2</tomcat.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<webserver.port>8181</webserver.port>
@@ -38,6 +38,11 @@
 			<groupId>com.sun.jna</groupId>
 			<artifactId>jna</artifactId>
 			<version>3.0.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xvolks</groupId>
+			<artifactId>jnative</artifactId>
+			<version>1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

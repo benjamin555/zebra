@@ -51,7 +51,7 @@ public class Print {
 	private static int moveAdjust = 0;
 
 	public interface TSCLIB_DLL_GP3150TN extends Library {
-		String path = Print.class.getResource("/").getPath().substring(1) + "TSCLIB";
+		String path = Print.class.getResource("/").getPath().substring(1) + "Fnthex32";
 		TSCLIB_DLL_GP3150TN INSTANCE = (TSCLIB_DLL_GP3150TN) Native.loadLibrary(path, TSCLIB_DLL_GP3150TN.class);
 
 		int about();
