@@ -20,23 +20,27 @@ public class ZplPrint {
 	private static int charSize = 20;
 	private static int charSep = 10;
 	private static int lineSep = 20;
-	private static int height = 385;
+	//打印纸宽度 x
+	private static int width = 500;
+	//打印纸高度 y
+//小纸张 	private static int height = 385;
+	private static int height = 750;
 	private static int lableLength = 5 * cnCharSize;
-	private static int labelx = 530;
-	private static int labely = 170;
+	private static int labelx = width-20;
+	private static int labely = height/12*5;
 
 	//二维码起始的x
-	private static int bqx = 350;
+	private static int bqx = width/12*5+20;
 	//二维码起始的y
 	private static int bqy = 20;
 	//底部内容起始的x
-	private static int bottomx = 170;
+	private static int bottomx = bqx-30;
 	//底部内容起始的y
 	private static int bottomy = 20;
 
 	public static void execute(Order o) {
 		ZplPrint p = new ZplPrint(o.getMachineName());
-		String content_str = o.getBatchCode();
+		String content_str = o.toString();
 		//		//F0 x坐标，y坐标
 		String qrcode_t = "^FO%s,%s^BQ,2,4^FDQA,${data}^FS";
 		qrcode_t = String.format(qrcode_t, bqx, bqy);
