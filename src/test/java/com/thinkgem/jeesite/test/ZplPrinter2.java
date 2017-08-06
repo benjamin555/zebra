@@ -25,7 +25,12 @@ public class ZplPrinter2 {
 	private static String content = "";
 	private static int cnCharSize = 25;
 	private static int charSize = 20;
-	private static int charSep = 20;
+	private static int charSep = 10;
+	private static int lineSep = 20;
+	private static int height = 395;
+	private static int lableLength = 5* cnCharSize;
+	private static int labelx = 530;
+	private static int labely = 180;
 	
 //	^XA
 //
@@ -49,30 +54,37 @@ public class ZplPrinter2 {
 		p.setBarcode(content_str, qrcode_t);
 		
 		content+="^FWR";
-		int lableLength = 5* cnCharSize;
-		int labelx = 530;
-		int labely = 180;
 		
-		p.setCharR("批次号：", labelx, labely,true);
-		p.setCharR("10003", labelx, labely+lableLength,false);
-		labelx-=cnCharSize*2;
-		p.setCharR("采购订单：", labelx, labely,true);
-		p.setCharR("4000300088/0010", labelx, labely+lableLength,false);
-		labelx-=cnCharSize*2;
-		p.setCharR("供应商：", labelx, labely,true);
-		p.setText("内蒙古打印机名称", labelx, labely+lableLength);
-		labelx-=cnCharSize*2;
-		p.setCharR("合同号：", labelx, labely,true);
-		p.setCharR("HT-2017-001", labelx, labely+lableLength,false);
-		labelx-=cnCharSize*2;
-		p.setCharR("需求部门：", labelx, labely,true);
-		p.setText("a天涯实a验室", labelx, labely+lableLength);
+		int[] xy = new int[]{labelx,labely};
+		
+		String label1 = "批次号：";
+		String value1 = "10003";
+		
+		xy = setLabelValue(p, xy, label1, value1);
+		
+		xy = setLabelValue(p, xy, "采购订单：", "4000300088/0010");
+		
+		
+		xy = setLabelValue(p, xy, "供应商：","内蒙古打印机名称");
+		xy = setLabelValue(p, xy, "合同号：","HT-2017-001");
+		xy = setLabelValue(p, xy, "需求部门：","a天涯实a验室");
+		
+		
 		content += "^CI0^PQ1";//打印1张
 		
 //		content = "^XA^FO150,100^BY3^B4N,20,A,A^FD12345ABCDE^FS^XZ";
 		String zpl2 = p.getZpl();
 		System.out.println("zpl:"+zpl2);
 		p.print(zpl2);
+	}
+
+	private static int[] setLabelValue(ZplPrinter2 p, int[] xy, String label1, String value1) {
+		xy[1]=labely;
+		xy = p.setText(label1, xy);
+		xy[1]=labely +lableLength;
+		xy = p.setText(value1, xy);
+		xy[0]-=charSize+lineSep;
+		return xy;
 	}
 
 	 /** 
@@ -142,19 +154,28 @@ public class ZplPrinter2 {
 		 }
 
 	
-	public void setText(String str, int x, int y) {  
+	public int[] setText(String str, int[] xy) {  
         char[] charArray = str.toCharArray();
+        int x = xy[0];
+        int y = xy[1];
+        int initY = y;
         for (int off = 0; off < charArray.length;) {  
         	char c = charArray[off];
             if (!checkChar(c)) {  
                 setCharR(String.valueOf(c), x, y,true);  
-                y = y + charSep;  
+                y = y + cnCharSize;  
             } else {  
-                setCharR(String.valueOf(c), x, y,false);  
+                setCharR(String.valueOf(c), x, y,false); 
                 y = y + charSep;  
-            }  
+            } 
+            
+            if(y>=height){
+            	y = initY;
+            	x -= charSize+lineSep;
+            }
             off++;  
         }  
+        return new int[]{x,y};
     }  
 
 	/**
