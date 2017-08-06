@@ -40,11 +40,6 @@
 			<version>3.0.9</version>
 		</dependency>
 		<dependency>
-			<groupId>org.xvolks</groupId>
-			<artifactId>jnative</artifactId>
-			<version>1.6</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang3.version}</version>
