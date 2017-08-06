@@ -14,18 +14,18 @@ import javax.print.SimpleDoc;
 import javax.print.attribute.DocAttributeSet;
 import javax.print.attribute.HashDocAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
-import javax.print.attribute.standard.OrientationRequested;
 import javax.print.attribute.standard.PrinterName;
 
 public class ZplPrinter2 {
 	private String printerURI = null;//打印机完整路径
 	private PrintService printService = null;//打印机服务
 	private byte[] dotFont;
-	private String begin = "^XA^SEE:GB18030.DAT^CW1,E:SIMSUN.FNT^PON^LH0,0"; //标签格式以^XA开始
+	private String begin = "^XA^SEE:GB18030.DAT^CW1,E:SIMSUN.FNT"; //标签格式以^XA开始
 	private String end = "^XZ"; //标签格式以^XZ结束
 	private static String content = "";
 	private static int cnCharSize = 25;
 	private static int charSize = 20;
+	private static int charSep = 20;
 	
 //	^XA
 //
@@ -45,7 +45,7 @@ public class ZplPrinter2 {
 		ZplPrinter2 p = new ZplPrinter2("ZDesigner GK888t_ol");
 		String content_str = "##|200050|25100400001|100|20161019|201101-03|820005016101900393##";
 //		//F0 x坐标，y坐标
-		String qrcode_t = "^FO530,20^BQ,2,3^FDQA,${data}^FS";
+		String qrcode_t = "^FO350,20^BQ,2,4^FDQA,${data}^FS";
 		p.setBarcode(content_str, qrcode_t);
 		
 		content+="^FWR";
@@ -58,6 +58,15 @@ public class ZplPrinter2 {
 		labelx-=cnCharSize*2;
 		p.setCharR("采购订单：", labelx, labely,true);
 		p.setCharR("4000300088/0010", labelx, labely+lableLength,false);
+		labelx-=cnCharSize*2;
+		p.setCharR("供应商：", labelx, labely,true);
+		p.setText("内蒙古打印机名称", labelx, labely+lableLength);
+		labelx-=cnCharSize*2;
+		p.setCharR("合同号：", labelx, labely,true);
+		p.setCharR("HT-2017-001", labelx, labely+lableLength,false);
+		labelx-=cnCharSize*2;
+		p.setCharR("需求部门：", labelx, labely,true);
+		p.setText("a天涯实a验室", labelx, labely+lableLength);
 		content += "^CI0^PQ1";//打印1张
 		
 //		content = "^XA^FO150,100^BY3^B4N,20,A,A^FD12345ABCDE^FS^XZ";
@@ -123,7 +132,30 @@ public class ZplPrinter2 {
 	public void setBarcode(String barcode, String zpl) {
 		content += zpl.replace("${data}", barcode);
 	}
+	
+	public static boolean checkChar(char ch) {
+		  if ((ch + "").getBytes().length == 1) {
+		   return true;//英文
+		  } else {
+		   return false;//中文
+		  }
+		 }
 
+	
+	public void setText(String str, int x, int y) {  
+        char[] charArray = str.toCharArray();
+        for (int off = 0; off < charArray.length;) {  
+        	char c = charArray[off];
+            if (!checkChar(c)) {  
+                setCharR(String.valueOf(c), x, y,true);  
+                y = y + charSep;  
+            } else {  
+                setCharR(String.valueOf(c), x, y,false);  
+                y = y + charSep;  
+            }  
+            off++;  
+        }  
+    }  
 
 	/**
 	*字符串(包含数字)
@@ -192,7 +224,7 @@ public class ZplPrinter2 {
 		}
 		DocFlavor flavor = DocFlavor.BYTE_ARRAY.AUTOSENSE;
 		DocAttributeSet das = new HashDocAttributeSet();
-		das.add(OrientationRequested.LANDSCAPE);
+//		das.add(OrientationRequested.LANDSCAPE);
 		das.add(new MediaPrintableArea(0, 0, 50, 70, MediaPrintableArea.MM));
 		Doc doc = new SimpleDoc(by, flavor, das);
 		
@@ -221,7 +253,7 @@ public class ZplPrinter2 {
 		}
 		byte[] abytes = null;
 		try {
-			abytes = s.getBytes("gb2312");
+			abytes = s.getBytes("gb18030");
 		} catch (UnsupportedEncodingException ex) {
 			ex.printStackTrace();
 		}
