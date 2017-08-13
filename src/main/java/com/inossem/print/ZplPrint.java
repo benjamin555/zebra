@@ -45,7 +45,7 @@ public class ZplPrint {
 
 	public void execute(Order o) {
 		this.init(o.getMachineName());
-		String content_str = o.toString();
+		String content_str =o.getMaterielCode()+","+o.getBatchCode();
 		//		//F0 x坐标，y坐标
 		String qrcode_t = "^FO%s,%s^BQ,2,4^FDQA,${data}^FS";
 		qrcode_t = String.format(qrcode_t, bqx, bqy);
