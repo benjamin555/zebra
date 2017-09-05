@@ -17,10 +17,12 @@ import org.springframework.stereotype.Component;
 public class ZplPrint {
 	private String printerURI = null;//打印机完整路径
 	private PrintService printService = null;//打印机服务
-	private String begin = "^XA^SEE:GB18030.DAT^CW1,E:SIMSUN.FNT"; //标签格式以^XA开始
+	private String begin = "^XA^SEE:GB18030.DAT^CW1,E:SIMSUN.FNT"; //标签格式以^XA开始，字符集设置为GB18030，字体为宋体
 	private String end = "^XZ"; //标签格式以^XZ结束
 	private String content = "";
+	//中文字符尺寸
 	private int cnCharSize = 25;
+//	英文字符尺寸
 	private int charSize = 20;
 	private int charSep = 10;
 	private int lineSep = 20;
@@ -76,6 +78,14 @@ public class ZplPrint {
 		this.print(zpl2);
 	}
 
+	/**
+	 * 设置标签值
+	 * @param p
+	 * @param xy
+	 * @param label1
+	 * @param value1
+	 * @return
+	 */
 	private int[] setLabelValue(ZplPrint p, int[] xy, String label1, String value1) {
 		xy[1] = labely;
 		xy = p.setText(label1, xy);
@@ -85,6 +95,14 @@ public class ZplPrint {
 		return xy;
 	}
 
+	/**
+	 * 设置底部标签值
+	 * @param p
+	 * @param xy
+	 * @param label1
+	 * @param value1
+	 * @return
+	 */
 	private int[] setBottomLabelValue(ZplPrint p, int[] xy, String label1, String value1) {
 		xy[1] = bottomy;
 		xy = p.setText(label1, xy);
